@@ -2,11 +2,19 @@ package com.mposluszny.lolification.core.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQueries({
+	@NamedQuery(name = "player.all", query = "SELECT p FROM Player p"),
+	@NamedQuery(name = "player.byIgn", query = "SELECT p FROM Player p WHERE p.ign = :ign")
+})
 public class Player {
 
 	@Id
@@ -17,6 +25,7 @@ public class Player {
 	@Column(unique = true)
 	private String ign;
 	private String role;
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Team team;
 	private boolean isRetired;
 	

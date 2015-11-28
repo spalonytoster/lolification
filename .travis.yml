@@ -1,4 +1,5 @@
 language: java
+before_script: scripts/runHSQLDBClient.sh
 notifications:
   email:
     - xmachiei@gmail.com

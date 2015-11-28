@@ -8,9 +8,15 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 @Entity
+@NamedQueries({
+	@NamedQuery(name = "team.all", query = "SELECT t FROM Team t"),
+	@NamedQuery(name = "team.byName", query = "SELECT t FROM Team t WHERE t.name = :name")
+})
 public class Team {
 	
 	@Id
@@ -19,6 +25,7 @@ public class Team {
 	private String name;
 	private String region;
 	private String dateOfEstablishment;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Player> players;
 	
 	public Team () {
@@ -65,7 +72,6 @@ public class Team {
 		this.dateOfEstablishment = dateOfEstablishment;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	public List<Player> getPlayers() {
 		return players;
 	}
