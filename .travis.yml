@@ -1,5 +1,7 @@
 language: java
-before_script: ./scripts/runHSQLDBClient.sh
+before_script:
+  - chmod a+x ./scripts/*
+  - ./scripts/runHSQLDBClient.sh
 notifications:
   email:
     - xmachiei@gmail.com
