@@ -1,1 +1,4 @@
 language: java
+notifications:
+  email:
+    - xmachiei@gmail.com
