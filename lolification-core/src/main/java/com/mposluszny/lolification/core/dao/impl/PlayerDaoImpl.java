@@ -6,11 +6,13 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mposluszny.lolification.core.dao.PlayerDao;
 import com.mposluszny.lolification.core.domain.Player;
 
-@Component
+@Component("playerDao")
+@Transactional
 public class PlayerDaoImpl implements PlayerDao {
 
 	@Autowired

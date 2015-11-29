@@ -3,6 +3,7 @@ package com.mposluszny.lolification.core.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import com.mposluszny.lolification.core.dao.TeamDao;
 import com.mposluszny.lolification.core.domain.Player;
 import com.mposluszny.lolification.core.domain.Team;
 
-@Component
+@Component("teamDao")
 @Transactional
 public class TeamDaoImpl implements TeamDao {
 	
@@ -80,6 +81,17 @@ public class TeamDaoImpl implements TeamDao {
 		
 		List<Player> players = new ArrayList<Player>(team.getPlayers());
 		return players;
+	}
+
+	@Override
+	public void transferPlayer(long idPlayer, long newIdTeam) {
+		Session currentSession = getSessionFactory().getCurrentSession();
+		Player player = (Player) getSessionFactory().getCurrentSession()
+				.get(Player.class, idPlayer);
+		Team newTeam = (Team) getSessionFactory().getCurrentSession()
+				.get(Team.class, newIdTeam);
+		player.setTeam(newTeam);
+		currentSession.update(player);
 	}
 
 }

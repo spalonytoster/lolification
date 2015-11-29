@@ -15,4 +15,5 @@ public interface TeamDao {
 	public void deleteTeam(Team team);
 	public int count();
 	public List<Player> getPlayersForTeam(Team team);
+	public void transferPlayer(long idPlayer, long newIdTeam);
 }
