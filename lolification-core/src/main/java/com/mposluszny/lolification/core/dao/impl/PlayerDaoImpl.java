@@ -61,7 +61,7 @@ public class PlayerDaoImpl implements PlayerDao {
 	@Override
 	public int count() {
 		return ((Number) getSessionFactory().getCurrentSession()
-				.createCriteria("Player").setProjection(Projections.rowCount()).uniqueResult()).intValue();
+				.createCriteria(Player.class).setProjection(Projections.rowCount()).uniqueResult()).intValue();
 	}
 
 }
