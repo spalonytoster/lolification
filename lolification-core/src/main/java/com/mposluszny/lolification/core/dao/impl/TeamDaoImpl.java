@@ -53,25 +53,27 @@ public class TeamDaoImpl implements TeamDao {
 
 	@Override
 	public void addTeam(Team team) {
-		
-		team = (Team) getSessionFactory().getCurrentSession()
-				.get(Team.class, team.getIdTeam());
-		
-		for (Player player : team.getPlayers()) {
-			player.setTeam(null);
-		}
 		getSessionFactory().getCurrentSession().persist(team);
 	}
 
 	@Override
 	public void deleteTeam(Team team) {
+		team = (Team) getSessionFactory().getCurrentSession()
+				.get(Team.class, team.getIdTeam());
+		
+		if (team.getPlayers() != null) {
+			for (Player player : team.getPlayers()) {
+				player.setTeam(null);
+			}
+		}
+		
 		getSessionFactory().getCurrentSession().delete(team);
 	}
 
 	@Override
 	public int count() {
 		return ((Number) getSessionFactory().getCurrentSession()
-				.createCriteria("Team").setProjection(Projections.rowCount()).uniqueResult()).intValue();
+				.createCriteria(Team.class).setProjection(Projections.rowCount()).uniqueResult()).intValue();
 	}
 
 	@Override

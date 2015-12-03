@@ -27,7 +27,7 @@ public class Player {
 	@Column(unique = true)
 	private String ign;
 	private String role;
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	private Team team;
 	private boolean isRetired;
 	
