@@ -1,5 +1,6 @@
 package com.mposluszny.lolification.core.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mposluszny.lolification.core.dao.PlayerDao;
 import com.mposluszny.lolification.core.domain.Player;
+import com.mposluszny.lolification.core.domain.Team;
 
 @Component("playerDao")
 @Transactional
@@ -50,6 +52,11 @@ public class PlayerDaoImpl implements PlayerDao {
 
 	@Override
 	public void addPlayer(Player player) {
+		if (player.getTeam().getPlayers() == null) {
+			List<Player> players = new ArrayList<>();
+			players.add(player);
+			player.getTeam().setPlayers(players);
+		}
 		getSessionFactory().getCurrentSession().persist(player);
 	}
 

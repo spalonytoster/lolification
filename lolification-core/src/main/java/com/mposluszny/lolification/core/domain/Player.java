@@ -1,7 +1,6 @@
 package com.mposluszny.lolification.core.domain;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 
 @Entity
 @NamedQueries({
@@ -24,48 +22,14 @@ public class Player {
 	private long idPlayer;
 	private String name;
 	private String surname;
-	@Column(unique = true)
 	private String ign;
 	private String role;
-	@OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	private Team team;
 	private boolean isRetired;
 	
 	public Player() {
 		
-		
-	}
-	
-	public Player(String name, String surname, String ign, String role, Team team, boolean isRetired) {
-		
-		this.name = name;
-		this.surname = surname;
-		this.ign = ign;
-		this.setRole(role);
-		this.team = team;
-		this.isRetired = isRetired;
-	}
-	
-	public Player(String name, String surname, String ign, String role, long idTeam, boolean isRetired) {
-		
-		this.name = name;
-		this.surname = surname;
-		this.ign = ign;
-		this.setRole(role);
-		this.team = new Team();
-		this.team.setIdTeam(idTeam);
-		this.isRetired = isRetired;
-	}
-	
-	public Player(String name, String surname, String ign, String role, String teamName, boolean isRetired) {
-		
-		this.name = name;
-		this.surname = surname;
-		this.ign = ign;
-		this.role = role;
-		this.team = new Team();
-		this.team.setName(teamName);
-		this.isRetired = isRetired;
 	}
 	
 	public long getIdPlayer() {

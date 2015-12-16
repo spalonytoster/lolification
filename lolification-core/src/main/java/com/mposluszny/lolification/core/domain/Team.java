@@ -25,19 +25,11 @@ public class Team {
 	private String name;
 	private String region;
 	private String dateOfEstablishment;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	private List<Player> players;
 	
 	public Team () {
 		
-		
-	}
-	
-	public Team (String name, String region, String dateOfEstablishment) {
-		
-		this.name = name;
-		this.region = region;
-		this.dateOfEstablishment = dateOfEstablishment;
 	}
 	
 	public long getIdTeam() {
