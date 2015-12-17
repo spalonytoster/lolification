@@ -13,4 +13,5 @@ public interface PlayerDao {
 	public void addPlayer(Player player);
 	public void deletePlayer(Player player);
 	public int count();
+	public void transferPlayer(long idPlayer, long idTeam);
 }

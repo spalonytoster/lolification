@@ -6,7 +6,7 @@ import com.mposluszny.lolification.core.domain.Player;
 import com.mposluszny.lolification.core.domain.Team;
 
 public interface TeamDao {
-
+	
 	public List<Team> getAllTeams();
 	public Team getTeamById (long idTeam);
 	public Team getTeamByName (String name);
@@ -15,5 +15,4 @@ public interface TeamDao {
 	public void deleteTeam(Team team);
 	public int count();
 	public List<Player> getPlayersForTeam(Team team);
-	public void transferPlayer(long idPlayer, long newIdTeam);
 }

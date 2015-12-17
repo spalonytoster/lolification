@@ -1,7 +1,9 @@
 package com.mposluszny.lolification.core.dao;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -60,7 +62,9 @@ public class DAOTest {
         }
 
         String propsPath = argProps.getProperty(ServerProperties.sc_key_props);
-        String propsExtension = "";
+        
+        @SuppressWarnings("unused")
+		String propsExtension = "";
 
         if (propsPath == null) {
             propsPath      = "server";
@@ -96,55 +100,69 @@ public class DAOTest {
 	
 	@Test
 	public void TestGetAll() {
-		assertNotNull(teamDao.getAllTeams());
-		assertTrue(teamDao.getAllTeams().size() == teamDao.count());
-		assertTrue(playerDao.getAllPlayers().size() == playerDao.count());
+		
+		List<Team> teams = teamDao.getAllTeams();
+		List<Player> players = playerDao.getAllPlayers();
+		int teamCount = teamDao.count();
+		int playerCount = playerDao.count();
+		
+		assertNotNull(teams);
+		assertNotNull(players);
+		assertTrue(teams.size() == teamCount);
+		assertTrue(players.size() == playerCount);
 	}
 	
 	@Test
 	public void addTest() {
 		
-		final String IGN = "Wildturtle";
+		/**
+		 * Dodawanie z perspektywy Playera
+		 */
+		
+		final String IGN = "xPeke";
+		
 		Team team1 = new TeamBuilder()
-				.name("TSM")
-				.region("NA")
+				.name("Origen")
+				.region("EU")
 				.dateOfEstablishment("2010-10-10")
 					.build();
 				
 		Player player1 = new PlayerBuilder()
-				.name("Jason")
-				.surname("Tran")
+				.name("Enrique")
+				.surname("Cedeño Martínez")
 				.ign(IGN)
-				.role("ADC")
+				.role("MID")
 				.team(team1)
 				.isRetired(false)
 					.build();
 		
-		/////////////////////////////////////////////////////
+		/**
+		 * Dodawanie z perspektywy Team
+		 */
 		
 		List<Player> team2Players = new ArrayList<>();
 		
 		Team team2 = new TeamBuilder()
-				.name("Fnatic")
-				.region("EU")
+				.name("Cloud9")
+				.region("NA")
 				.dateOfEstablishment("2010-09-09")
 				.players(team2Players)
 					.build();
 		
 		Player player2 = new PlayerBuilder()
-				.name("Bora")
-				.surname("Kim")
-				.ign("YellOwStaR")
-				.role("Support")
+				.name("Zachary")
+				.surname("Scuderi")
+				.ign("Sneaky")
+				.role("ADC")
 				.team(team2)
 				.isRetired(false)
 					.build();
 		
 		Player player3 = new PlayerBuilder()
-				.name("Martin")
-				.surname("Larsson")
-				.ign("Rekkles")
-				.role("ADC")
+				.name("Daerek")
+				.surname("Hart")
+				.ign("LemonNation")
+				.role("Staff")
 				.team(team2)
 				.isRetired(false)
 					.build();
@@ -174,70 +192,180 @@ public class DAOTest {
 	
 	@Test
 	public void updateTest() {
-//
-//		Team team = new Team("Roccat", "EU", "2011-10-10");
-//		teamDao.addTeam(team);
-//		team = teamDao.getTeamByName("Roccat");
-//		final String NEW_NAME = "Kiedys Mialem Team";
-//		team.setName(NEW_NAME);
-//		teamDao.updateTeam(team);
-//		Team team2 = teamDao.getTeamByName(NEW_NAME);
-//		assertEquals(team.getIdTeam(), team2.getIdTeam());
-//		
-//		Player player = new Player("Marcin", "Jankowski", "Jankos", "Jungle", team2, false);
-//		playerDao.addPlayer(player);
-//		player = playerDao.getPlayerByIgn("Jankos");
-//		assertFalse(player.isRetired());
-//		player.setRetired(true);
-//		playerDao.updatePlayer(player);
-//		Player player2 = playerDao.getPlayerByIgn("Jankos");
-//		assertTrue(player2.isRetired());
+		
+		final String OLD_NAME = "Roccat";
+		final String NEW_NAME = "Kiedys Mialem Team";
+
+		Team team = teamDao.getTeamByName(OLD_NAME);		
+		team.setName(NEW_NAME);
+		teamDao.updateTeam(team);
+		
+		Team team2 = teamDao.getTeamByName(NEW_NAME);
+		assertEquals(team.getIdTeam(), team2.getIdTeam());
+		
+		Player player = playerDao.getPlayerByIgn("Jankos");
+		assertFalse(player.isRetired());
+		player.setRetired(true);
+		playerDao.updatePlayer(player);
+		Player player2 = playerDao.getPlayerByIgn("Jankos");
+		assertTrue(player2.isRetired());
 	}
 	
 	@Test
-	public void deleteTest() {
-//		Player player1 = new Player("Macrcus", "Hill", "Dyrus", "TOP", "TSM", true);
-//		Player player2 = new Player("Fabian", "Diepstraten", "Febiven", "MID", "Fnatic", false);
-//		Team team = new Team("CLG", "NA", "2010-09-25");
-//		
-//		playerDao.addPlayer(player1); playerDao.addPlayer(player2);
-//		teamDao.addTeam(team);
-//		
-//		player1 = playerDao.getPlayerByIgn(player1.getIgn());
-//		player2 = playerDao.getPlayerByIgn(player2.getIgn());
-//		team = teamDao.getTeamByName("CLG");
-//		
-//		int playerCountBefore = playerDao.count();
-//		int teamCountBefore = teamDao.count();
-//		
-//		playerDao.deletePlayer(player1);
-//		playerDao.deletePlayer(player2);
-//		teamDao.deleteTeam(team);
-//		
-//		int playerCountAfter = playerDao.count();
-//		int teamCountAfter= teamDao.count();
-//		
-//		assertTrue(playerCountBefore == playerCountAfter+2);
-//		assertTrue(teamCountBefore == teamCountAfter+1);
+	public void deleteTeamTest() {
+
+		Team team = new TeamBuilder()
+				.name("CLG")
+				.region("NA")
+				.dateOfEstablishment("2010-09-25")
+				.players(new ArrayList<Player>())
+					.build();
+		
+		Player player1 = new PlayerBuilder()
+				.name("George")
+				.surname("Georgallidis")
+				.ign("HotshotGG")
+				.role("President/Co-Founder")
+				.team(team)
+				.isRetired(false)
+					.build();
+		
+		Player player2 = new PlayerBuilder()
+				.name("Zaqueri")
+				.surname("Black")
+				.ign("Aphromoo")
+				.role("Support")
+				.team(team)
+				.isRetired(false)
+					.build();
+		
+		team.getPlayers().add(player1); team.getPlayers().add(player2);
+		teamDao.addTeam(team);
+		playerDao.addPlayer(player1); playerDao.addPlayer(player2);
+		
+		player1 = playerDao.getPlayerByIgn(player1.getIgn());
+		player2 = playerDao.getPlayerByIgn(player2.getIgn());
+		team = teamDao.getTeamByName("CLG");
+		
+		int playerCountBefore, teamCountBefore, playerCountAfter, teamCountAfter;
+		
+		playerCountBefore = playerDao.count();
+		teamCountBefore = teamDao.count();
+		
+		teamDao.deleteTeam(team);
+		teamCountAfter= teamDao.count();
+		playerCountAfter = playerDao.count();
+		
+		assertTrue(teamCountBefore == teamCountAfter+1);
+		assertTrue(playerCountBefore == playerCountAfter);
+		assertNull(playerDao.getPlayerByIgn(player1.getIgn()).getTeam());
+		assertNull(playerDao.getPlayerByIgn(player2.getIgn()).getTeam());
+		
+		playerCountBefore = playerDao.count();
+		playerDao.deletePlayer(player1);
+		playerDao.deletePlayer(player2);
+		playerCountAfter = playerDao.count();
+		assertTrue(playerCountBefore == playerCountAfter+2);
 	}
 	
 	@Test
-	public void testRelation() {
-		// TODO napisać test
-//		Team team = teamDao.getTeamByName("Fnatic");
-//		team.setPlayers(teamDao.getPlayersForTeam(team));
-//		
-//		for (Player player : team.getPlayers()) {
-//			
-//			assertTrue(player.getTeam().getIdTeam() == team.getIdTeam());
-//		}
+	public void deletePlayerTest() {
+
+		Team team = new TeamBuilder()
+				.name("CLG")
+				.region("NA")
+				.dateOfEstablishment("2010-09-25")
+				.players(new ArrayList<Player>())
+					.build();
+		
+		Player player1 = new PlayerBuilder()
+				.name("George")
+				.surname("Georgallidis")
+				.ign("HotshotGG")
+				.role("President/Co-Founder")
+				.team(team)
+				.isRetired(false)
+					.build();
+		
+		Player player2 = new PlayerBuilder()
+				.name("Zaqueri")
+				.surname("Black")
+				.ign("Aphromoo")
+				.role("Support")
+				.team(team)
+				.isRetired(false)
+					.build();
+		
+		team.getPlayers().add(player1); team.getPlayers().add(player2);
+		teamDao.addTeam(team);
+		playerDao.addPlayer(player1); playerDao.addPlayer(player2);
+		
+		player1 = playerDao.getPlayerByIgn(player1.getIgn());
+		player2 = playerDao.getPlayerByIgn(player2.getIgn());
+		team = teamDao.getTeamByName("CLG");
+		
+		int playerCountBefore, teamCountBefore, playerCountAfter, teamCountAfter;
+		
+		teamCountBefore = teamDao.count();
+		playerCountBefore = playerDao.count();
+		playerDao.deletePlayer(player1);
+		playerDao.deletePlayer(player2);
+		playerCountAfter = playerDao.count();
+		teamCountAfter = teamDao.count();
+		
+		assertTrue(playerCountBefore == playerCountAfter+2);
+		assertTrue(teamCountBefore == teamCountAfter);
+		
+		assertNotNull(teamDao.getTeamByName("CLG"));
 	}
+	
+	
+	/**
+	 *	Podobnie jak w deleteTeamTest i deletePlayerTest tylko, że zapisywane obiekty nie posiadają referencji do siebie.
+	 *	Naszym zadaniem jest powiązać te obiekty w bazie za pomocą usługi `transferPlayer`.
+	 */
 	
 	@Test
 	public void transferPlayerTest() {
 		
-		//TODO napisać test
+		Team team1 = new TeamBuilder()
+				.name("CLG")
+				.region("NA")
+				.dateOfEstablishment("2010-09-25")
+					.build();
+		
+		Team team2 = new TeamBuilder()
+				.name("Elements")
+				.region("EU")
+				.dateOfEstablishment("2013-05-17")
+				.players(new ArrayList<Player>())
+					.build();
+		
+		Player player = new PlayerBuilder()
+				.name("George")
+				.surname("Georgallidis")
+				.ign("HotshotGG")
+				.role("President/Co-Founder")
+				.team(team2)
+				.isRetired(false)
+					.build();
+		team2.getPlayers().add(player);
+		
+		teamDao.addTeam(team1); teamDao.addTeam(team2);
+		playerDao.addPlayer(player);
+		
+		player = playerDao.getPlayerByIgn(player.getIgn());
+		team1 = teamDao.getTeamByName(team1.getName());
+		
+		assertNull(team1.getPlayers());
+		
+		playerDao.transferPlayer(player.getIdPlayer(), team1.getIdTeam());
+		player = playerDao.getPlayerByIgn(player.getIgn());
+		team1 = teamDao.getTeamByName(team1.getName());
+		
+		assertEquals(player.getTeam(), team1);
+		assertTrue(team1.getPlayers().contains(player));
+		
 	}
-	
 
 }

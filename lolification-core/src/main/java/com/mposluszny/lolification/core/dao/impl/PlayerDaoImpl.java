@@ -52,17 +52,33 @@ public class PlayerDaoImpl implements PlayerDao {
 
 	@Override
 	public void addPlayer(Player player) {
-		if (player.getTeam().getPlayers() == null) {
-			List<Player> players = new ArrayList<>();
-			players.add(player);
-			player.getTeam().setPlayers(players);
-		}
 		getSessionFactory().getCurrentSession().persist(player);
 	}
 
 	@Override
 	public void deletePlayer(Player player) {
+		if (player.getTeam() != null) {
+			player.getTeam().getPlayers().remove(player);
+		}
 		getSessionFactory().getCurrentSession().delete(player);
+	}
+
+	@Override
+	public void transferPlayer(long idPlayer, long idTeam) {		
+		Player player = (Player) getSessionFactory().getCurrentSession()
+				.get(Player.class, idPlayer);
+		Team team = (Team) getSessionFactory().getCurrentSession()
+				.get(Team.class, idTeam);
+		if (player.getTeam() != null) {
+			player.getTeam().getPlayers().remove(player);
+		}
+		if (team.getPlayers() == null) {
+			team.setPlayers(new ArrayList<Player>());
+		}
+		team.getPlayers().add(player);
+		player.setTeam(team);
+		getSessionFactory().getCurrentSession().update(player);
+		getSessionFactory().getCurrentSession().update(team);
 	}
 
 	@Override
